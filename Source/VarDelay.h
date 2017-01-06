@@ -10,19 +10,20 @@
 #define VarDelay_h
 
 #include "../JuceLibraryCode/JuceHeader.h"
+#include <array>
 
 class VarDelay{
 public:
-    float Read(float delay);
-    void Write(float value);
-    void Pluck(float mag);
-    void Clear();
+    float read(float delay);
+    void write(float value);
+    void pluck(float mag);
+    void reset();
 private:
     Random random;
     
     static const int Len = 4096;
     static const int Mask = Len-1;
-    float buffer[Len] = {};
+    std::array<float,Len> buffer = {};
     int sample = 0;
     
     

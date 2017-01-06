@@ -13,6 +13,8 @@
 #include "DspUtil.h"
 #include "FDNReverb.h"
 #include "VarDelay.h"
+#include "LowpassFilter.h"
+#include "AllpassFilter.h"
 
 
 class MPEWaveguideVoice : public MPESynthesiserVoice{
@@ -38,37 +40,17 @@ public:
     
     
     
-    static float SoftClip(float v){
-        float a = 0.04f;
-        float b = 0.08f;
-        float G = 1.01f;
-        return (exp(v*(a+G))-exp(v*(b-G)))/(exp(v)+exp(-v));
-        
-    }
     
     
 private:
     Random random;
     
     LinearSmoothedValue<double> level, timbre, frequency;
-    
-    float weird = 0;
-    float oldw = 0;
-    float oldx = 0;
-    static const int allcount = 1;
-    float allnet[allcount] = {};
-    bool left = false;
-    int waveW = 0;
-    float oldT = 0;
+    LowpassFilter attenuator;
+    AllpassFilter harmonicStretcher;
 
-    
-    
-   
-    
-    
-    
     FDNReverb verb;
-    VarDelay wave1;
+    VarDelay wave;
     
     const double maxLevel = 0.05f;
     const double maxLevelDb = 31.0f;

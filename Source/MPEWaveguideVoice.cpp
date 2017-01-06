@@ -20,7 +20,7 @@ void MPEWaveguideVoice::noteStarted()
     timbre.setValue (currentlyPlayingNote.timbre.asUnsignedFloat());
     float vel = currentlyPlayingNote.noteOnVelocity.asUnsignedFloat();
     vel = vel*vel;
-    wave1.Pluck(vel);
+    wave.pluck(vel);
     
     
 }
@@ -31,7 +31,11 @@ void MPEWaveguideVoice::noteStopped (bool allowTailOff)
     
     
     clearCurrentNote();
-    wave1.Clear();
+    wave.reset();
+    verb.reset();
+    attenuator.reset();
+    harmonicStretcher.reset();
+
     
 }
 
@@ -78,59 +82,35 @@ void MPEWaveguideVoice::renderNextBlock (AudioBuffer<float>& outputBuffer,
     
     
     
-    float c = 0.1f;//screenY;
     
     
     for (int sample = 0; sample < numSamples; ++sample){
         float freq = frequency.getNextValue();
         float lev = 1-level.getNextValue();
-        //t = oldT;
         float wlen = getSampleRate()/freq;
         
+
+        
+        float damper = saturate((lev-0.9f)/0.1f);
+        float blaster = saturate(((1-lev)-0.5f)*2.0);
+        
+        attenuator.set(0.98-damper*0.5);
         
         
+        harmonicStretcher.set(0.1f);
+
+        float out = softClip(harmonicStretcher.process(-attenuator.process(wave.read(wlen))));
+
+        
+        float reverberation = verb.process(out);
+                
         
         
-        //float ii = wave[waveR]*fw+wave[(waveR+1)%blen]*(1-fw);
+        wave.write(out*(blaster*0.05f+1.f)+reverberation*0.05f);
         
-        float ii = wave1.Read(wlen);
-        
-        float damper = fmin(fmax((lev-0.9f)/0.1f,0),1);
-        float blaster = fmin(fmax(((1-lev)-0.5f)/0.5f,0),1);
-        
-        
-        oldw = (ii*(0.98f-damper*0.51f)+(oldw*(0.019f+damper*0.5f)));
-        
-        
-        
-        
-        float in = -oldw;
-        
-        float out = 0;
-        int amt = allcount;
-        
-        for(int i=0; i<amt; i++){
-            float con = c+(float)i/amt*0.1f;
-            allnet[i] = -con*in+oldx+ con*allnet[i];
-            out+=allnet[i]/amt;
+        for (int i = outputBuffer.getNumChannels(); --i >= 0;){
+            outputBuffer.addSample (i, startSample+sample, out*0.5f+reverberation*0.5f);
         }
-        
-        
-        oldx = in;
-        
-        
-        float output = verb.processSample(out);
-        
-        float bell = SoftClip(out+output*0.05f);
-        
-        blaster = fmax(0,fmin(1,blaster));
-        
-        
-        
-        wave1.Write(bell*(blaster*0.05f+1.f));
-        
-        for (int i = outputBuffer.getNumChannels(); --i >= 0;)
-            outputBuffer.addSample (i, startSample+sample, bell*0.5f+output*0.5f);
     }
     
     

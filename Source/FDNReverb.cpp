@@ -9,17 +9,13 @@
 
 
     FDNReverb::FDNReverb(){
-        for(int i=0; i<delayCount; i++){
-            delays[i] = new float[len*primes[i]];
-            for(int j=0;j<len*primes[i];j++){
-                delays[i][j]=0;
-                
-            }
-            
+        for (int i = 0; i<delayCount; ++i)
+        {
+            delays[i].resize(len*primes[i],0);
         }
     }
   
-    float FDNReverb::processSample(float sample){
+    float FDNReverb::process(float sample){
         
         float feed[delayCount]={};
         
@@ -59,30 +55,25 @@
             int W = writers[i];
             
             
-            
-            olds[i] = 0.8*olds[i]+0.2*feed[i];
-            float c = 1.f;
-            
-            
-            float input = SoftClip(sample*0.2f + olds[i]);//olds[i];
+            attenuators[i].set(0.2);
+            allpass[i].set(1.f);
             
             
-            
-            float output1 = allpass[i]+c*(input-c*allpass[i]);
-            
-            allpass[i] = input-c*allpass[i];
-            
-            
-            
-            
-            delays[i][W] = output1;
-            
-            
-            
+            delays[i][W] = allpass[i].process(softClip(sample*0.2f + attenuators[i].process(feed[i])));
+
         }
         
         return out;
     }
 
-    
+void FDNReverb::reset(){
+    for(int i=0; i<delayCount; i++){
+        allpass[i].reset();
+        attenuators[i].reset();
+        delays[i].clear();
+        delays[i].resize(primes[i]*len,0);
+        writers[i]=0;
+    }
+}
+
 
