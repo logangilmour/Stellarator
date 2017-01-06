@@ -32,7 +32,6 @@ void MPEWaveguideVoice::noteStopped (bool allowTailOff)
     
     clearCurrentNote();
     wave.reset();
-    verb.reset();
     attenuator.reset();
     harmonicStretcher.reset();
 
@@ -91,25 +90,24 @@ void MPEWaveguideVoice::renderNextBlock (AudioBuffer<float>& outputBuffer,
         
 
         
-        float damper = saturate((lev-0.9f)/0.1f);
-        float blaster = saturate(((1-lev)-0.5f)*2.0);
+        float damper = saturate(lev);
+        float blaster = saturate(1-lev);
         
-        attenuator.set(0.98-damper*0.5);
+        attenuator.set(0.96-damper*0.5);
         
         
-        harmonicStretcher.set(0.1f);
+        harmonicStretcher.set(0.2f);
 
         float out = softClip(harmonicStretcher.process(-attenuator.process(wave.read(wlen))));
 
         
-        float reverberation = verb.process(out);
-                
         
         
-        wave.write(out*(blaster*0.05f+1.f)+reverberation*0.05f);
+        
+        wave.write(out*(blaster*0.05f+1.f));
         
         for (int i = outputBuffer.getNumChannels(); --i >= 0;){
-            outputBuffer.addSample (i, startSample+sample, out*0.5f+reverberation*0.5f);
+            outputBuffer.addSample (i, startSample+sample, out);
         }
     }
     

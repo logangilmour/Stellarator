@@ -11,7 +11,6 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "DspUtil.h"
-#include "FDNReverb.h"
 #include "VarDelay.h"
 #include "LowpassFilter.h"
 #include "AllpassFilter.h"
@@ -49,7 +48,6 @@ private:
     LowpassFilter attenuator;
     AllpassFilter harmonicStretcher;
 
-    FDNReverb verb;
     VarDelay wave;
     
     const double maxLevel = 0.05f;
