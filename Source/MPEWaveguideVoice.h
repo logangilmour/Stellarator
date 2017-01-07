@@ -35,7 +35,11 @@ public:
     //==============================================================================
     void renderNextBlock (AudioBuffer<float>& outputBuffer,
                           int startSample,
-                          int numSamples) override;
+                          int numSamples) override {};
+    
+    void renderNextBlock (AudioBuffer<float>& outputBuffer,std::array<float,512> feedback,
+                          int startSample,
+                          int numSamples);
     
     
     

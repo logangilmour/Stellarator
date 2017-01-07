@@ -11,8 +11,8 @@
 #ifndef PLUGINPROCESSOR_H_INCLUDED
 #define PLUGINPROCESSOR_H_INCLUDED
 
-#include "FDNReverb.h"
 #include "../JuceLibraryCode/JuceHeader.h"
+#include "MPEWaveguideSynth.h"
 
 
 //==============================================================================
@@ -59,8 +59,7 @@ public:
 
 private:
     //==============================================================================
-    MPESynthesiser synth;
-    FDNReverb verb;
+    MPEWaveguideSynth synth;
     MidiMessageCollector midiCollector;
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (StellaratorAudioProcessor)
 };

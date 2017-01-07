@@ -26,7 +26,7 @@ StellaratorAudioProcessor::StellaratorAudioProcessor()
                        )
 #endif
 {
-    for(int i=0; i<10; ++i)
+    for(int i=0; i<15; ++i)
     {
         synth.addVoice(new MPEWaveguideVoice);
     }
@@ -147,20 +147,7 @@ void StellaratorAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuf
     
     synth.renderNextBlock(buffer, midiMessages, 0, buffer.getNumSamples());
     
-    float* const buf = buffer.getWritePointer(0,0);
-    
-    for (int sample = 0; sample < buffer.getNumSamples(); ++sample)
-    {
-        float in = softClip(buf[sample]);
-        buf[sample] = verb.process(in)*0.5f+in*0.5f;
-    }
-    for (int i = 1; i < totalNumOutputChannels; ++i){
-        float* const buf2 = buffer.getWritePointer(i,0);
-        for (int sample = 0; sample < buffer.getNumSamples(); ++sample)
-        {
-            buf2[sample]=buf[sample];
-        }
-    }
+  
     
 }
 

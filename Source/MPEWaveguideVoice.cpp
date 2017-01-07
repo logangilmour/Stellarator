@@ -7,6 +7,7 @@
 //
 
 #include "MPEWaveguideVoice.h"
+#include <array>
 
 void MPEWaveguideVoice::noteStarted()
 {
@@ -71,7 +72,7 @@ void MPEWaveguideVoice::setCurrentSampleRate (double newRate)
     }
 }
 
-void MPEWaveguideVoice::renderNextBlock (AudioBuffer<float>& outputBuffer,
+void MPEWaveguideVoice::renderNextBlock (AudioBuffer<float>& outputBuffer, std::array<float,512> feedback,
                       int startSample,
                       int numSamples)
 {
@@ -93,7 +94,7 @@ void MPEWaveguideVoice::renderNextBlock (AudioBuffer<float>& outputBuffer,
         float damper = saturate(lev);
         float blaster = saturate(1-lev);
         
-        attenuator.set(0.96-damper*0.5);
+        attenuator.set(0.94-damper*0.5);
         
         
         harmonicStretcher.set(0.2f);
@@ -104,7 +105,7 @@ void MPEWaveguideVoice::renderNextBlock (AudioBuffer<float>& outputBuffer,
         
         
         
-        wave.write(out*(blaster*0.05f+1.f));
+        wave.write(out*(pow(blaster,5)*0.025f+1.f)-feedback[startSample+sample]*0.1);
         
         for (int i = outputBuffer.getNumChannels(); --i >= 0;){
             outputBuffer.addSample (i, startSample+sample, out);
