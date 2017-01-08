@@ -22,7 +22,7 @@ protected:
     
 private:
     FDNReverb reverb;
-    std::array<float,512> verbBuffer = {};
+    float reverbFeedback;
 };
 
 #endif /* MPEWaveguideSynth_h */

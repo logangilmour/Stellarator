@@ -31,7 +31,7 @@ StellaratorAudioProcessor::StellaratorAudioProcessor()
         synth.addVoice(new MPEWaveguideVoice);
     }
     synth.enableLegacyMode (48);
-    synth.setVoiceStealingEnabled (false);
+    synth.setVoiceStealingEnabled (true);
 }
 
 StellaratorAudioProcessor::~StellaratorAudioProcessor()

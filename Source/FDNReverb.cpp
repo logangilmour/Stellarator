@@ -59,7 +59,7 @@
             allpass[i].set(1.f);
             
             
-            delays[i][W] = allpass[i].process(softClip(sample*0.2f + attenuators[i].process(feed[i])));
+            delays[i][W] = allpass[i].process(softClip(sample*0.2f + attenuators[i].process(feed[i])))*0.98f;
 
         }
         
