@@ -18,7 +18,7 @@
 //==============================================================================
 /**
 */
-class StellaratorAudioProcessorEditor  : public AudioProcessorEditor
+class StellaratorAudioProcessorEditor  : public AudioProcessorEditor, private Timer
 {
 public:
     StellaratorAudioProcessorEditor (StellaratorAudioProcessor&);
@@ -27,14 +27,16 @@ public:
     //==============================================================================
     void paint (Graphics&) override;
     void resized() override;
-
+    
 private:
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
     StellaratorAudioProcessor& processor;
+    void timerCallback() override;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (StellaratorAudioProcessorEditor)
 };
 
+static float display_freq;
 
 #endif  // PLUGINEDITOR_H_INCLUDED

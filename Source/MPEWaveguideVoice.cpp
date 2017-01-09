@@ -8,6 +8,8 @@
 
 #include "MPEWaveguideVoice.h"
 #include <array>
+#include <string>
+#include "PluginEditor.h"
 
 void MPEWaveguideVoice::noteStarted()
 {
@@ -22,7 +24,7 @@ void MPEWaveguideVoice::noteStarted()
     float vel = currentlyPlayingNote.noteOnVelocity.asUnsignedFloat();
     vel = vel*vel;
     wave.pluck(vel);
-    
+    Logger::outputDebugString ("Midi played "+std::to_string(currentlyPlayingNote.getFrequencyInHertz()));
     
 }
 
@@ -80,14 +82,17 @@ void MPEWaveguideVoice::setCurrentSampleRate (double newRate)
 
 float MPEWaveguideVoice::process(float feedback){
     float freq = frequency.getNextValue();
+    
     float lev = 1-level.getNextValue();
     float wlen = getSampleRate()/freq;
     
+    float len = 256/freq;
     
+    len = pow(len,0.5);
     
     float blaster = saturate(1-lev);
-    
-    attenuator.set(0.9);
+    float fc = freq*16/44100;
+    attenuator.set(fc);
     
     
     harmonicStretcher.set(0.2f);
@@ -98,7 +103,7 @@ float MPEWaveguideVoice::process(float feedback){
     
     
     
-    wave.write(out*(pow(blaster,5)*0.025f+1.f)-feedback*0.05*saturate((blaster-0.95)*20));
+    wave.write(out*(pow(blaster,5)*0.05f*len+1.f)-feedback*0.01*saturate((blaster-0.95)*20));
     return out;
 
 }

@@ -13,7 +13,7 @@ class LowpassFilter{
 public:
     float process(float sample);
     void reset();
-    void set(float k);
+    void set(float freq);
 private:
     float buffer = 0;
     float k = 0.0f;

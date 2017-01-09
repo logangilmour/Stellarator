@@ -7,13 +7,14 @@
 //
 
 #include "LowpassFilter.h"
+#include "Math.h"
 
 float LowpassFilter::process(float sample){
-    buffer = sample*k+buffer*(1-k);
+    buffer = sample*(1-k)+buffer*k;
     return buffer;
 }
-void LowpassFilter::set(float v){
-    k = v;
+void LowpassFilter::set(float freq){
+        k = exp(-2.0 * M_PI * freq);
 }
 void LowpassFilter::reset(){
     buffer = 0;

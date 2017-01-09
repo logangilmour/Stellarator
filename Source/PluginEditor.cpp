@@ -10,6 +10,7 @@
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
+#include <string>
 
 
 //==============================================================================
@@ -19,6 +20,7 @@ StellaratorAudioProcessorEditor::StellaratorAudioProcessorEditor (StellaratorAud
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
     setSize (400, 300);
+    startTimerHz(30);
 }
 
 StellaratorAudioProcessorEditor::~StellaratorAudioProcessorEditor()
@@ -28,11 +30,19 @@ StellaratorAudioProcessorEditor::~StellaratorAudioProcessorEditor()
 //==============================================================================
 void StellaratorAudioProcessorEditor::paint (Graphics& g)
 {
+    std::string message ("Freq: ");
+    
     g.fillAll (Colours::white);
 
     g.setColour (Colours::black);
     g.setFont (15.0f);
-    g.drawFittedText ("Hello World!", getLocalBounds(), Justification::centred, 1);
+    g.drawFittedText (message+std::to_string(display_freq), getLocalBounds(), Justification::centred, 1);
+}
+
+void StellaratorAudioProcessorEditor::timerCallback()
+{
+    
+    repaint();
 }
 
 void StellaratorAudioProcessorEditor::resized()
@@ -40,3 +50,4 @@ void StellaratorAudioProcessorEditor::resized()
     // This is generally where you'll want to lay out the positions of any
     // subcomponents in your editor..
 }
+

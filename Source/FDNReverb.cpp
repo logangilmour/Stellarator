@@ -55,7 +55,7 @@
             int W = writers[i];
             
             
-            attenuators[i].set(0.2);
+            attenuators[i].set(0.255799);
             allpass[i].set(1.f);
             
             
