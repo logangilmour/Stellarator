@@ -25,7 +25,7 @@ public:
     
 private:
     static const int delayCount = 16;
-    static const int len = 100;
+    static const int len = 11;
     
     std::array<bool,16> printed = {};
     

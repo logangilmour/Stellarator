@@ -55,11 +55,11 @@
             int W = writers[i];
             
             
-            attenuators[i].set(0.255799);
+            attenuators[i].set(10000.0/44100);
             allpass[i].set(1.f);
             
             
-            delays[i][W] = allpass[i].process(softClip(sample*0.2f + attenuators[i].process(feed[i])))*0.98f;
+            delays[i][W] = allpass[i].process(softClip(sample*0.2f + attenuators[i].process(feed[i])))*0.9f;
 
         }
         

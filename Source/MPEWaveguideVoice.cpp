@@ -21,9 +21,13 @@ void MPEWaveguideVoice::noteStarted()
     level.setValue (currentlyPlayingNote.pressure.asUnsignedFloat());
     frequency.setValue (currentlyPlayingNote.getFrequencyInHertz());
     timbre.setValue (currentlyPlayingNote.timbre.asUnsignedFloat());
+    bow.reset();
+    integrate=0;
+    diff=0;
     float vel = currentlyPlayingNote.noteOnVelocity.asUnsignedFloat();
     vel = vel*vel;
-    wave.pluck(vel);
+    //wave.pluck(vel);
+    wave.reset();
     Logger::outputDebugString ("Midi played "+std::to_string(currentlyPlayingNote.getFrequencyInHertz()));
     
 }
@@ -83,6 +87,7 @@ void MPEWaveguideVoice::setCurrentSampleRate (double newRate)
 float MPEWaveguideVoice::process(float feedback){
     float freq = frequency.getNextValue();
     
+    
     float lev = 1-level.getNextValue();
     float wlen = getSampleRate()/freq;
     
@@ -91,8 +96,10 @@ float MPEWaveguideVoice::process(float feedback){
     len = pow(len,0.5);
     
     float blaster = saturate(1-lev);
-    float fc = freq*16/44100;
+    float fc = freq*64/44100;
     attenuator.set(fc);
+    bow.set(10.0/44100);
+    corner.set(5000.0/44100);
     
     
     harmonicStretcher.set(0.2f);
@@ -100,10 +107,34 @@ float MPEWaveguideVoice::process(float feedback){
     float out = softClip(harmonicStretcher.process(-attenuator.process(wave.read(wlen))));
     
     
+    float feed = out;//out*(pow(blaster,5)*0.05f*len+1.f)-feedback*0.01*saturate((blaster-0.95)*20);
     
     
+    float diffed = feed - diff;
     
-    wave.write(out*(pow(blaster,5)*0.05f*len+1.f)-feedback*0.01*saturate((blaster-0.95)*20));
+    //blaster = pow(blaster,2);
+    
+    
+    diffed = fmax(-1,fmin(1,diffed));
+    
+    float bowVel = bow.process(pow(blaster,2));
+
+    if(diffed<0 && bowVel>0){
+        diffed=bowVel*10*0.001;//*len;
+    }else{
+        diffed=-bowVel*0.001;//*len;
+        
+    }
+    diffed = corner.process(diffed);
+    
+    
+    diff = feed;
+    
+    integrate = softClip((integrate+diffed)*0.999);
+
+    
+    
+    wave.write(integrate);//-feedback*0.01*saturate((blaster-0.95)*20));
     return out;
 
 }

@@ -49,9 +49,14 @@ private:
     
     LinearSmoothedValue<double> level, timbre, frequency;
     LowpassFilter attenuator;
+    LowpassFilter bow;
+    LowpassFilter corner;
     AllpassFilter harmonicStretcher;
 
     VarDelay wave;
+    
+    float integrate;
+    float diff;
     
     const double maxLevel = 0.05f;
     const double maxLevelDb = 31.0f;
