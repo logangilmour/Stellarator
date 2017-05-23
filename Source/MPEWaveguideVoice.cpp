@@ -16,22 +16,23 @@ void MPEWaveguideVoice::noteStarted()
     jassert (currentlyPlayingNote.isValid());
     jassert (currentlyPlayingNote.keyState == MPENote::keyDown
              || currentlyPlayingNote.keyState == MPENote::keyDownAndSustained);
-    
     //level.reset(currentSampleRate, smoothingLengthInSeconds);
     //timbre.reset (currentSampleRate, smoothingLengthInSeconds);
     //frequency.reset (currentSampleRate, smoothingLengthInSeconds);
     
     
     // get data from the current MPENote
-    //level.setValue (currentlyPlayingNote.pressure.asUnsignedFloat());
-    //frequency.setValue (currentlyPlayingNote.getFrequencyInHertz());
-    //timbre.setValue (currentlyPlayingNote.timbre.asUnsignedFloat());
+    level.setValue (currentlyPlayingNote.pressure.asUnsignedFloat());
+    frequency.setValue (currentlyPlayingNote.getFrequencyInHertz());
+    timbre.setValue (currentlyPlayingNote.timbre.asUnsignedFloat());
 
     //angle=0;
 
     //wave.reset();
     //attenuator.reset();
     //harmonicStretcher.reset();
+    static uint32 noteStart = 0;
+    noteStartTime = noteStart++;
 
 }
 
