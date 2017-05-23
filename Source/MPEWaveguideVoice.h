@@ -47,16 +47,13 @@ public:
 private:
     Random random;
     
-    LinearSmoothedValue<double> level, timbre, frequency;
+    LinearSmoothedValue<double> level, timbre, frequency, tailoff;
     LowpassFilter attenuator;
-    LowpassFilter bow;
-    LowpassFilter corner;
     AllpassFilter harmonicStretcher;
 
     VarDelay wave;
-    
-    float integrate;
-    float diff;
+
+    float angle;
     
     const double maxLevel = 0.05f;
     const double maxLevelDb = 31.0f;
