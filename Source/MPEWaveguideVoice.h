@@ -40,9 +40,7 @@ public:
     
     float process(float feedback);
     
-    
-    
-    
+    int compareTo(MPEWaveguideVoice* other);
     
 private:
     Random random;
@@ -52,8 +50,11 @@ private:
     AllpassFilter harmonicStretcher;
 
     VarDelay wave;
-
+    
     float angle;
+    
+    int noteID;
+
     
     const double maxLevel = 0.05f;
     const double maxLevelDb = 31.0f;

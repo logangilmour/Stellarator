@@ -20,6 +20,8 @@ protected:
                                      int startSample,
                                      int numSamples) override;
     
+    MPESynthesiserVoice* findVoiceToSteal (MPENote noteToStealVoiceFor = MPENote()) const override;
+    
 private:
     FDNReverb reverb;
     float reverbFeedback;

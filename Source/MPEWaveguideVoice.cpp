@@ -32,8 +32,12 @@ void MPEWaveguideVoice::noteStarted()
     //attenuator.reset();
     //harmonicStretcher.reset();
     static uint32 noteStart = 0;
-    noteStartTime = noteStart++;
+    noteID = noteStart++;
 
+}
+
+int MPEWaveguideVoice::compareTo(MPEWaveguideVoice* other){
+    return other->noteID > noteID ? -1 : other->noteID < noteID ? 1 : 0;
 }
 
 void MPEWaveguideVoice::noteStopped (bool allowTailOff)
