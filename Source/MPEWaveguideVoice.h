@@ -42,18 +42,25 @@ public:
     
     int compareTo(MPEWaveguideVoice* other);
     
+    float vol;
+
+    
 private:
     Random random;
     
     LinearSmoothedValue<double> level, timbre, frequency, tailoff;
     LowpassFilter attenuator;
     AllpassFilter harmonicStretcher;
+    LowpassFilter volume;
 
     VarDelay wave;
     
     float angle;
     
+    
     int noteID;
+    
+    bool playing=false;
 
     
     const double maxLevel = 0.05f;

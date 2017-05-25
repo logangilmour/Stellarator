@@ -31,6 +31,7 @@ void MPEWaveguideVoice::noteStarted()
     //wave.reset();
     //attenuator.reset();
     //harmonicStretcher.reset();
+    playing = true;
     static uint32 noteStart = 0;
     noteID = noteStart++;
 
@@ -44,9 +45,11 @@ void MPEWaveguideVoice::noteStopped (bool allowTailOff)
 {
     jassert (currentlyPlayingNote.keyState == MPENote::off);
     level.setValue(0);
+    playing=false;
     if(!allowTailOff){
         clearCurrentNote();
-
+        volume.reset();
+        vol=0;
         angle=0;
     wave.reset();
     attenuator.reset();
@@ -62,22 +65,28 @@ void MPEWaveguideVoice::noteStopped (bool allowTailOff)
 
 void MPEWaveguideVoice::notePressureChanged()
 {
-    level.setValue (currentlyPlayingNote.pressure.asUnsignedFloat());
-    
+    if(playing){
+        level.setValue (currentlyPlayingNote.pressure.asUnsignedFloat());
+    }
 }
 
 void MPEWaveguideVoice::notePitchbendChanged()
 {
-    frequency.setValue (currentlyPlayingNote.getFrequencyInHertz());
+    if(playing){
+        frequency.setValue (currentlyPlayingNote.getFrequencyInHertz());
+    }
 }
 
 void MPEWaveguideVoice::noteTimbreChanged()
 {
-    timbre.setValue (currentlyPlayingNote.timbre.asUnsignedFloat());
+    if(playing){
+        timbre.setValue (currentlyPlayingNote.timbre.asUnsignedFloat());
+    }
 }
 
 void MPEWaveguideVoice::noteKeyStateChanged()
 {
+
 }
 
 void MPEWaveguideVoice::setCurrentSampleRate (double newRate)
@@ -86,7 +95,7 @@ void MPEWaveguideVoice::setCurrentSampleRate (double newRate)
     {
         noteStopped (false);
         currentSampleRate = newRate;
-        
+        vol=0;
         level.reset (currentSampleRate, smoothingLengthInSeconds);
         timbre.reset (currentSampleRate, smoothingLengthInSeconds);
         frequency.reset (currentSampleRate, smoothingLengthInSeconds);
@@ -121,7 +130,12 @@ float MPEWaveguideVoice::process(float feedback){
         
     }
     wave.write(softClip(wav*blaster*blaster*0.3+out)-feedback*0.1*saturate((blaster-0.95)*20));
-
+    volume.set(1);
+    vol = volume.process(fabs(out));
+    if(currentlyPlayingNote.keyState == MPENote::off && vol<0.000001){
+        noteStopped(false);
+    }
+    
     return out;
 
 }

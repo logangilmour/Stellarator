@@ -10,6 +10,7 @@
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
+#include "MPEWaveguideVoice.h"
 #include <string>
 
 
@@ -21,6 +22,7 @@ StellaratorAudioProcessorEditor::StellaratorAudioProcessorEditor (StellaratorAud
     // editor's size to whatever you need it to be.
     setSize (400, 300);
     startTimerHz(30);
+    
 }
 
 StellaratorAudioProcessorEditor::~StellaratorAudioProcessorEditor()
@@ -34,14 +36,16 @@ void StellaratorAudioProcessorEditor::paint (Graphics& g)
     
     g.fillAll (Colours::white);
 
-    g.setColour (Colours::black);
-    g.setFont (15.0f);
-    g.drawFittedText (message+std::to_string(display_freq), getLocalBounds(), Justification::centred, 1);
 }
 
 void StellaratorAudioProcessorEditor::timerCallback()
 {
-    
+    int voices = processor.synth.getNumVoices();
+    for(int i=0; i<voices; i++){
+        auto voice = static_cast<MPEWaveguideVoice*>(processor.synth.getVoice(i));
+        Logger::outputDebugString ("Vol "+std::to_string(i)+": "+std::to_string(voice->vol));
+    }
+
     repaint();
 }
 
