@@ -42,7 +42,7 @@ public:
     
     int compareTo(MPEWaveguideVoice* other);
     
-    float vol;
+    double vol;
 
     
 private:

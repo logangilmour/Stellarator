@@ -21,6 +21,8 @@ protected:
                                      int numSamples) override;
     
     MPESynthesiserVoice* findVoiceToSteal (MPENote noteToStealVoiceFor = MPENote()) const override;
+    MPESynthesiserVoice* findFreeVoice (MPENote noteToFindVoiceFor,
+                                                bool stealIfNoneAvailable) const override;
     
 private:
     FDNReverb reverb;

@@ -46,6 +46,23 @@ struct MPEVoiceAgeSorter
     }
 };
 
+MPESynthesiserVoice* MPEWaveguideSynth::findFreeVoice (MPENote noteToFindVoiceFor, bool stealIfNoneAvailable) const
+{
+    
+    for (int i = 0; i < voices.size(); ++i)
+    {
+        MPESynthesiserVoice* const voice = voices.getUnchecked (i);
+        
+        if (! voice->isActive() || voice->isCurrentlyPlayingNote(noteToFindVoiceFor))
+            return voice;
+    }
+    
+    if (stealIfNoneAvailable)
+        return findVoiceToSteal (noteToFindVoiceFor);
+    
+    return nullptr;
+}
+
 MPESynthesiserVoice* MPEWaveguideSynth::findVoiceToSteal (MPENote noteToStealVoiceFor) const
 {
     // This voice-stealing algorithm applies the following heuristics:

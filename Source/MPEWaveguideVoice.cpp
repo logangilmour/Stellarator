@@ -117,7 +117,7 @@ float MPEWaveguideVoice::process(float feedback){
     
     
     float blaster = saturate(1-lev);
-    float fc = freq*16/44100;
+    float fc = freq*512/44100;
     attenuator.set(fc);
 
     harmonicStretcher.set(0.1f);
@@ -130,9 +130,10 @@ float MPEWaveguideVoice::process(float feedback){
         
     }
     wave.write(softClip(wav*blaster*blaster*0.3+out)-feedback*0.1*saturate((blaster-0.95)*20));
-    volume.set(1);
-    vol = volume.process(fabs(out));
-    if(currentlyPlayingNote.keyState == MPENote::off && vol<0.000001){
+    volume.set(0.1);
+    float curVol = fabs(out);
+    vol = volume.process(curVol*curVol);
+    if(currentlyPlayingNote.keyState == MPENote::off && vol<0.0000001){
         noteStopped(false);
     }
     
