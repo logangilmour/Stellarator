@@ -14,6 +14,7 @@
 #include "VarDelay.h"
 #include "LowpassFilter.h"
 #include "AllpassFilter.h"
+#include "Wavetable.h"
 
 
 class MPEWaveguideVoice : public MPESynthesiserVoice{
@@ -52,6 +53,7 @@ private:
     LowpassFilter attenuator;
     AllpassFilter harmonicStretcher;
     LowpassFilter volume;
+    Wavetable wavetable;
 
     VarDelay wave;
     

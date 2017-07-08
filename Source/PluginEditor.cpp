@@ -40,11 +40,6 @@ void StellaratorAudioProcessorEditor::paint (Graphics& g)
 
 void StellaratorAudioProcessorEditor::timerCallback()
 {
-    int voices = processor.synth.getNumVoices();
-    for(int i=0; i<voices; i++){
-        auto voice = static_cast<MPEWaveguideVoice*>(processor.synth.getVoice(i));
-        Logger::outputDebugString ("Vol "+std::to_string(i)+": "+std::to_string(voice->vol));
-    }
 
     repaint();
 }

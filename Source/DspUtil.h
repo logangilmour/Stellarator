@@ -19,6 +19,10 @@ static float softClip(float v){
     
 }
 
+static float lerp(float v1, float v2, float ratio){
+    return v1*ratio+v2*(1-ratio);
+}
+
 static float saturate(float v){
     return fmax(0,fmin(1,v));
 }

@@ -7,7 +7,7 @@
 //
 
 #include "LowpassFilter.h"
-#include "Math.h"
+#include <cmath>
 
 float LowpassFilter::process(float sample){
     buffer = sample*(1-k)+buffer*k;

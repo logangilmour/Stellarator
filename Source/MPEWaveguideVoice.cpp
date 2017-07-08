@@ -31,6 +31,12 @@ void MPEWaveguideVoice::noteStarted()
     //wave.reset();
     //attenuator.reset();
     //harmonicStretcher.reset();
+    //wave.pluck(currentlyPlayingNote.noteOnVelocity.asUnsignedFloat());
+    int len = (int)currentSampleRate/currentlyPlayingNote.getFrequencyInHertz();
+    int olen = len;
+    float count = std::log2(olen);
+    Logger::outputDebugString ("Freq "+std::to_string(len)+", "+std::to_string(count));//+": "+std::to_string(voice->vol));
+
     playing = true;
     static uint32 noteStart = 0;
     noteID = noteStart++;
@@ -52,6 +58,7 @@ void MPEWaveguideVoice::noteStopped (bool allowTailOff)
         vol=0;
         angle=0;
     wave.reset();
+        //wavetable.reset();
     attenuator.reset();
     harmonicStretcher.reset();
         if(currentSampleRate>0) {
@@ -113,30 +120,33 @@ float MPEWaveguideVoice::process(float feedback){
     
     float lev = 1-level.getNextValue();
     
-    float wlen = getSampleRate()/freq;
+    float wlen = getSampleRate()/(freq);
     
     
     float blaster = saturate(1-lev);
-    float fc = freq*512/44100;
+    float fc = freq*32/44100;
     attenuator.set(fc);
 
     harmonicStretcher.set(0.1f);
     
     float out = softClip(harmonicStretcher.process(-attenuator.process(wave.read(wlen))));
     
-    float wav =0;
-    for(int i=0; i<10;i++){
-        wav+=sin(angle*(i+1))/(i+1+(1-blaster*blaster)*i*i*10);
-        
-    }
-    wave.write(softClip(wav*blaster*blaster*0.3+out)-feedback*0.1*saturate((blaster-0.95)*20));
+    float wav = wavetable.process(saturate(lev),freq);
+    
+    //float wav =0;
+    //for(int i=0; i<50;i++){
+    //    wav+=sin(angle*(i+1))/(i+1+(1-blaster*blaster)*i*10);
+    //}
+    wave.write(softClip(wav*blaster*blaster*2+out)-feedback*0.1*saturate((blaster-0.95)*20));
     volume.set(0.1);
     float curVol = fabs(out);
     vol = volume.process(curVol*curVol);
     if(currentlyPlayingNote.keyState == MPENote::off && vol<0.0000001){
         noteStopped(false);
     }
-    
+    //return softClip(wav*blaster);
+    return wav;
     return out;
+    
 
 }

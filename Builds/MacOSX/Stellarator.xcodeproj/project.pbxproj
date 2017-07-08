@@ -55,6 +55,7 @@
 		41879BA71E1EB9A300810944 /* VarDelay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 41879BA51E1EB9A300810944 /* VarDelay.cpp */; };
 		41879BAB1E1FFE5000810944 /* AllpassFilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 41879BAA1E1FFE5000810944 /* AllpassFilter.cpp */; };
 		41879BB21E2181B300810944 /* MPEWaveguideSynth.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 41879BB01E2181B300810944 /* MPEWaveguideSynth.cpp */; };
+		419F2B4F1EDB402800ACA90B /* Wavetable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 419F2B4D1EDB402800ACA90B /* Wavetable.cpp */; };
 		429B8043D18B635D041151D0 /* juce_audio_formats.mm in Sources */ = {isa = PBXBuildFile; fileRef = 605F41277BB20777740963FB /* juce_audio_formats.mm */; };
 		499FD315DA99B85EB792CF79 /* RecentFilesMenuTemplate.nib in Resources */ = {isa = PBXBuildFile; fileRef = EFDA914D9A97BB89C15CF394 /* RecentFilesMenuTemplate.nib */; };
 		49E63FF65690AA60A13B3EEA /* juce_audio_basics.mm in Sources */ = {isa = PBXBuildFile; fileRef = 58BCD7AD8171A4768DDC8B0A /* juce_audio_basics.mm */; };
@@ -480,6 +481,8 @@
 		41879BAA1E1FFE5000810944 /* AllpassFilter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AllpassFilter.cpp; path = ../../Source/AllpassFilter.cpp; sourceTree = "<group>"; };
 		41879BAF1E21817300810944 /* MPEWaveguideSynth.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MPEWaveguideSynth.h; path = ../../Source/MPEWaveguideSynth.h; sourceTree = "<group>"; };
 		41879BB01E2181B300810944 /* MPEWaveguideSynth.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MPEWaveguideSynth.cpp; path = ../../Source/MPEWaveguideSynth.cpp; sourceTree = "<group>"; };
+		419F2B4D1EDB402800ACA90B /* Wavetable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Wavetable.cpp; path = ../../Source/Wavetable.cpp; sourceTree = "<group>"; };
+		419F2B4E1EDB402800ACA90B /* Wavetable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Wavetable.h; path = ../../Source/Wavetable.h; sourceTree = "<group>"; };
 		41B24866FE924A6BEE47D1CA /* jdmarker.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = jdmarker.c; path = ../../../juce/modules/juce_graphics/image_formats/jpglib/jdmarker.c; sourceTree = SOURCE_ROOT; };
 		41E5BC2FB15898300F28F554 /* juce_FlexBox.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = juce_FlexBox.cpp; path = ../../../juce/modules/juce_gui_basics/layout/juce_FlexBox.cpp; sourceTree = SOURCE_ROOT; };
 		421A670D72CC4F40E0B8B0EF /* pngrtran.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = pngrtran.c; path = ../../../juce/modules/juce_graphics/image_formats/pnglib/pngrtran.c; sourceTree = SOURCE_ROOT; };
@@ -2610,6 +2613,8 @@
 				41879BAA1E1FFE5000810944 /* AllpassFilter.cpp */,
 				41879BAF1E21817300810944 /* MPEWaveguideSynth.h */,
 				41879BB01E2181B300810944 /* MPEWaveguideSynth.cpp */,
+				419F2B4D1EDB402800ACA90B /* Wavetable.cpp */,
+				419F2B4E1EDB402800ACA90B /* Wavetable.h */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -3924,6 +3929,7 @@
 				3AF44400EACF4C1B1878FAC6 /* juce_cryptography.mm in Sources */,
 				3D173E9889AB753883443B00 /* juce_data_structures.mm in Sources */,
 				E6FC61A587C2ECFCEA485356 /* juce_events.mm in Sources */,
+				419F2B4F1EDB402800ACA90B /* Wavetable.cpp in Sources */,
 				0761D8A8400B66E04BC3CB6A /* juce_graphics.mm in Sources */,
 				E62D62031ABB093772E7D41F /* juce_gui_basics.mm in Sources */,
 				8ED35E2763CB1065FCE1C4A3 /* juce_gui_extra.mm in Sources */,
