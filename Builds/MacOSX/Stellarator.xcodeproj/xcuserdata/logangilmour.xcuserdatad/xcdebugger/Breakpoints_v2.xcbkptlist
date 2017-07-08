@@ -40,11 +40,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../../Source/MPEWaveguideVoice.cpp"
-            timestampString = "520728651.595711"
+            timestampString = "521237913.362924"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "54"
-            endingLineNumber = "54"
+            startingLineNumber = "57"
+            endingLineNumber = "57"
             landmarkName = "MPEWaveguideVoice::noteStopped (bool allowTailOff)"
             landmarkType = "7">
          </BreakpointContent>

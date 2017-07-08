@@ -19,36 +19,54 @@ Wavetable::Wavetable(){
     initialized=true;
 
     for(int i=0; i< Levels; ++i){
-        float level = (float)i/(Levels-1);
+        float lev = (float)i/(Levels-1);
+        bool gotit = false;
         for(int j=0;j<mips;++j){
-            int len = 1<<j;
-            int off = mipOffset(j);
+            int mip = j;
+            int len = mipSize(mip);
+            int off = mipOffset(mip);
 
             for(int s=0; s<len; s++){
                 float wav = 0;
-                float t = (float)s/len*float_Pi*2;
+                float angle = (float)s/len*float_Pi*2;
                 
-                for(int h = 1; len/h>32;++h){
-                    wav+=sin(t*h)/(h+(level*level)*h*10);
+                for(int h = 1; len/h>1;++h){
+                    int harmonic = h-1;
+                    //wav+=sin(t*h)/(h+(level*level)*h*10)*(1-level);
+                    //wav+=sin(angle*(h+1))/(h+1+(1-level*level)*h*10)*level;
+                    //wav+=sin(angle*h)/(h+(1-lev*lev)*(h-1)*10);
+                    wav+=sin(angle*(harmonic+1))/(harmonic+1+(1-lev*lev)*harmonic*10);
+
+
                 }
                 
                 buffer[i][off+s]=wav;
+                if(off+s==size-1){
+                    gotit=true;
+                }
+                if(off+s>=size){
+                    Logger::outputDebugString("Oh fuck");
+                }
+                
             }
+        }
+        if(gotit){
+            Logger::outputDebugString("GOOD");
         }
     }
 }
 
 int Wavetable::mipOffset(int mip){
-    int offset = 0;
-    for(int i=0; i<mip; ++i){
-        offset = offset << 1;
-        offset = offset | 1;
-    }
-    return offset;
+    return (1<<mip)-1;
 }
 
+int Wavetable::mipSize(int mip){
+    return 1<<mip;
+}
+
+
 float Wavetable::freqToMip(float freq){
-    return std::log2(sampleRate/freq);
+    return std::log2(44100/freq)-1;
 }
 
 float Wavetable::process(float level, float freq){
@@ -57,33 +75,38 @@ float Wavetable::process(float level, float freq){
     
     int lowMip = std::floor(mip);
     int highMip = std::ceil(mip);
-    float intpart;
-    mip = std::modff(mip,&intpart);
+    float mipblend = 1-(mip-lowMip);
     
-    int lowLevel = std::floor(level*(Levels-1));
-    int highLevel = std::ceil(level*(Levels-1));
+    float levelIndex = level*(Levels-1);
+    
+    int lowLevel = std::floor(levelIndex);
+    int highLevel = std::ceil(levelIndex);
+    
+    float levelBlend = 1-(levelIndex - lowLevel);
+    
     return lerp(
-        lerp(sample(lowMip,lowLevel),sample(highMip,lowLevel),mip),
-        lerp(sample(lowMip,highLevel),sample(highMip,highLevel),mip),
-        level
+        lerp(sample(lowMip,lowLevel),sample(highMip,lowLevel),mipblend),
+        lerp(sample(lowMip,highLevel),sample(highMip,highLevel),mipblend),
+        levelBlend
         );
     
 }
 
 float Wavetable::sample(int mip, int level){
-    long len = 1<<mip;
+    long len = mipSize(mip);
+    
     double index = angle*len;
     
     long lowIndex = std::floor(index);
     long highIndex = std::ceil(index);
     
     double intpart;
-    index = std::modf(index,&intpart);
+    float sampleBlend = 1-std::modf(index,&intpart);
     
     float val1 = buffer[level][mipOffset(mip)+lowIndex%len];
     float val2 = buffer[level][mipOffset(mip)+highIndex%len];
     
-    return lerp(val1,val2,index);
+    return lerp(val1,val2,sampleBlend);
 }
 
 

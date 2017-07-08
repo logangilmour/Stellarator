@@ -34,8 +34,11 @@ void MPEWaveguideVoice::noteStarted()
     //wave.pluck(currentlyPlayingNote.noteOnVelocity.asUnsignedFloat());
     int len = (int)currentSampleRate/currentlyPlayingNote.getFrequencyInHertz();
     int olen = len;
-    float count = std::log2(olen);
-    Logger::outputDebugString ("Freq "+std::to_string(len)+", "+std::to_string(count));//+": "+std::to_string(voice->vol));
+    float mip = Wavetable::freqToMip(currentlyPlayingNote.getFrequencyInHertz());
+    int offset = Wavetable::mipOffset(mip);
+
+    
+    Logger::outputDebugString ("Freq "+std::to_string(mip)+", "+std::to_string(offset));//+": "+std::to_string(voice->vol));
 
     playing = true;
     static uint32 noteStart = 0;
@@ -112,18 +115,16 @@ void MPEWaveguideVoice::setCurrentSampleRate (double newRate)
 float MPEWaveguideVoice::process(float feedback){
     float freq = frequency.getNextValue();
     
-    angle+=freq/currentSampleRate*double_Pi;
+    angle+=freq/currentSampleRate*double_Pi*2;
     
     while(angle>2.0*double_Pi){
         angle-=2.0*double_Pi;
     }
     
-    float lev = 1-level.getNextValue();
+    float lev = level.getNextValue();
     
     float wlen = getSampleRate()/(freq);
     
-    
-    float blaster = saturate(1-lev);
     float fc = freq*32/44100;
     attenuator.set(fc);
 
@@ -131,13 +132,16 @@ float MPEWaveguideVoice::process(float feedback){
     
     float out = softClip(harmonicStretcher.process(-attenuator.process(wave.read(wlen))));
     
-    float wav = wavetable.process(saturate(lev),freq);
     
-    //float wav =0;
-    //for(int i=0; i<50;i++){
-    //    wav+=sin(angle*(i+1))/(i+1+(1-blaster*blaster)*i*10);
-    //}
-    wave.write(softClip(wav*blaster*blaster*2+out)-feedback*0.1*saturate((blaster-0.95)*20));
+    float wav =0;
+    if(true){
+    wav = wavetable.process(saturate(lev),freq);
+    }else{
+    for(int i=0; i<200;i++){
+        wav+=sin(angle*(i+1))/(i+1+(1-lev*lev)*i*10);
+    }
+    }
+    wave.write(softClip(wav*lev*lev*2+out)-feedback*0.1*saturate((1-lev-0.95)*20));
     volume.set(0.1);
     float curVol = fabs(out);
     vol = volume.process(curVol*curVol);
@@ -145,8 +149,8 @@ float MPEWaveguideVoice::process(float feedback){
         noteStopped(false);
     }
     //return softClip(wav*blaster);
-    return wav;
-    return out;
+    return softClip(wav*lev);
+    //return out;
     
 
 }
