@@ -16,29 +16,12 @@ void MPEWaveguideVoice::noteStarted()
     jassert (currentlyPlayingNote.isValid());
     jassert (currentlyPlayingNote.keyState == MPENote::keyDown
              || currentlyPlayingNote.keyState == MPENote::keyDownAndSustained);
-    //level.reset(currentSampleRate, smoothingLengthInSeconds);
-    //timbre.reset (currentSampleRate, smoothingLengthInSeconds);
-    //frequency.reset (currentSampleRate, smoothingLengthInSeconds);
-    
-    
-    // get data from the current MPENote
+
     level.setValue (currentlyPlayingNote.pressure.asUnsignedFloat());
     frequency.setValue (currentlyPlayingNote.getFrequencyInHertz());
     timbre.setValue (currentlyPlayingNote.timbre.asUnsignedFloat());
-
-    //angle=0;
-
-    //wave.reset();
-    //attenuator.reset();
-    //harmonicStretcher.reset();
-    //wave.pluck(currentlyPlayingNote.noteOnVelocity.asUnsignedFloat());
-    int len = (int)currentSampleRate/currentlyPlayingNote.getFrequencyInHertz();
-    int olen = len;
-    float mip = Wavetable::freqToMip(currentlyPlayingNote.getFrequencyInHertz());
-    int offset = Wavetable::mipOffset(mip);
-
-    
-    Logger::outputDebugString ("Freq "+std::to_string(mip)+", "+std::to_string(offset));//+": "+std::to_string(voice->vol));
+ 
+    //Logger::outputDebugString ("Freq "+std::to_string(mip)+", "+std::to_string(offset));//+": "+std::to_string(voice->vol));
 
     playing = true;
     static uint32 noteStart = 0;
@@ -113,7 +96,7 @@ void MPEWaveguideVoice::setCurrentSampleRate (double newRate)
 }
 
 float MPEWaveguideVoice::process(float feedback){
-    float freq = frequency.getNextValue();
+    float freq = std::fmaxf(1,frequency.getNextValue());
     
     angle+=freq/currentSampleRate*double_Pi*2;
     
@@ -123,25 +106,25 @@ float MPEWaveguideVoice::process(float feedback){
     
     float lev = level.getNextValue();
     
-    float wlen = getSampleRate()/(freq);
+    float wlen = getSampleRate()/(freq*2);
     
-    float fc = freq*32/44100;
+    float fc = freq*16/44100;
     attenuator.set(fc);
 
     harmonicStretcher.set(0.1f);
     
     float out = softClip(harmonicStretcher.process(-attenuator.process(wave.read(wlen))));
     
-    
     float wav =0;
     if(true){
-    wav = wavetable.process(saturate(lev),freq);
+        wav = wavetable.process(saturate(lev),freq);
     }else{
     for(int i=0; i<200;i++){
         wav+=sin(angle*(i+1))/(i+1+(1-lev*lev)*i*10);
     }
     }
-    wave.write(softClip(wav*lev*lev*2+out)-feedback*0.1*saturate((1-lev-0.95)*20));
+    
+    wave.write(softClip((wav+rand.nextFloat()*0.5)*lev*lev*2+out)-softClip(feedback*0.1)*saturate((1-lev-0.95)*20));
     volume.set(0.1);
     float curVol = fabs(out);
     vol = volume.process(curVol*curVol);
@@ -149,8 +132,8 @@ float MPEWaveguideVoice::process(float feedback){
         noteStopped(false);
     }
     //return softClip(wav*blaster);
-    return softClip(wav*lev);
-    //return out;
+    //return softClip(wav*lev);
+    return out+wav*lev;
     
 
 }

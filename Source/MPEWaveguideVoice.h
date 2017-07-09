@@ -54,13 +54,14 @@ private:
     AllpassFilter harmonicStretcher;
     LowpassFilter volume;
     Wavetable wavetable;
+    Random rand;
 
     VarDelay wave;
     
-    float angle;
+    float angle=0;
     
     
-    int noteID;
+    int noteID=0;
     
     bool playing=false;
 

@@ -23,7 +23,7 @@ private:
     
     static const int Len = 4096;
     static const int Mask = Len-1;
-    std::array<float,Len> buffer = {};
+    std::array<float,Len> buffer = {0};
     int sample = 0;
     
     

@@ -24,9 +24,9 @@ void MPEWaveguideSynth::renderNextSubBlock (AudioBuffer<float>& buffer, int star
             }
             
         }
-        total = softClip(total*0.6);
+        total = softClip(total*0.1);
         reverbFeedback=reverb.process(total);
-        buffer.addSample(0, sample+startSample,total);
+        buffer.addSample(0, sample+startSample,total+reverbFeedback*5);
     }
 
 

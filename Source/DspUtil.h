@@ -9,7 +9,7 @@
 #ifndef DspUtil_h
 #define DspUtil_h
 
-#include <Math.h>
+#include <math.h>
 
 static float softClip(float v){
     float a = 0.04f;
