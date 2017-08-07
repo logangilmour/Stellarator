@@ -15,6 +15,8 @@
 
 
 class MPEWaveguideSynth : public MPESynthesiser{
+public:
+    void setParams(AudioProcessorValueTreeState* state);
 protected:
     void renderNextSubBlock (AudioBuffer<float>& outputAudio,
                                      int startSample,
@@ -27,6 +29,7 @@ protected:
 private:
     FDNReverb reverb;
     float reverbFeedback;
+    float output;
 };
 
 #endif /* MPEWaveguideSynth_h */

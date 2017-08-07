@@ -25,8 +25,6 @@ private:
     static const int Mask = Len-1;
     std::array<float,Len> buffer = {0};
     int sample = 0;
-    
-    
 };
 
 #endif /* VarDelay_h */

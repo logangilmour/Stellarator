@@ -16,7 +16,8 @@
     }
   
     float FDNReverb::process(float sample){
-        
+        angle+=1.f/1000;
+        float modulate = sin(angle);
         float feed[delayCount]={};
         
         float out = 0;
@@ -56,7 +57,7 @@
             
             
             attenuators[i].set(10000.0/44100);
-            allpass[i].set(1.f);
+            allpass[i].set(sin(angle*primes[i])*0.5f);
             
             
             delays[i][W] = allpass[i].process(softClip(sample*0.2f + attenuators[i].process(feed[i])))*0.9f;

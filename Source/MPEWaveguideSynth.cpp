@@ -24,18 +24,29 @@ void MPEWaveguideSynth::renderNextSubBlock (AudioBuffer<float>& buffer, int star
             }
             
         }
-        total = softClip(total*0.1);
+        total = softClip(total*output);
         reverbFeedback=reverb.process(total);
-        buffer.addSample(0, sample+startSample,total+reverbFeedback*5);
+        buffer.addSample(0, sample+startSample,reverbFeedback+total);
     }
 
 
     for(int i=1; i<buffer.getNumChannels(); ++i){
         for(int sample = 0; sample<numSamples; ++sample){
-        buffer.addSample(i,startSample+sample , buffer.getSample(0,sample+startSample));
+            buffer.addSample(i,startSample+sample , buffer.getSample(0,sample+startSample));
         }
     }
 
+}
+
+void MPEWaveguideSynth::setParams(AudioProcessorValueTreeState* state){
+    for (int i = voices.size(); --i >= 0;)
+    {
+        MPEWaveguideVoice* voice = static_cast<MPEWaveguideVoice*>(voices.getUnchecked (i));
+            
+        voice->setParams(state);
+        output = *(state->getRawParameterValue("output"));
+    }
+    
 }
 
 struct MPEVoiceAgeSorter

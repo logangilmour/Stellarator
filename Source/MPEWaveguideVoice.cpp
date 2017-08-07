@@ -11,6 +11,10 @@
 #include <string>
 #include "PluginEditor.h"
 
+void MPEWaveguideVoice::setParams(AudioProcessorValueTreeState* state){
+    
+}
+
 void MPEWaveguideVoice::noteStarted()
 {
     jassert (currentlyPlayingNote.isValid());
@@ -108,23 +112,17 @@ float MPEWaveguideVoice::process(float feedback){
     
     float wlen = getSampleRate()/(freq*2);
     
-    float fc = freq*16/44100;
+    float fc = freq*512/44100;
     attenuator.set(fc);
 
-    harmonicStretcher.set(0.1f);
+    harmonicStretcher.set(0.08);
     
     float out = softClip(harmonicStretcher.process(-attenuator.process(wave.read(wlen))));
     
-    float wav =0;
-    if(true){
-        wav = wavetable.process(saturate(lev),freq);
-    }else{
-    for(int i=0; i<200;i++){
-        wav+=sin(angle*(i+1))/(i+1+(1-lev*lev)*i*10);
-    }
-    }
-    
-    wave.write(softClip((wav+rand.nextFloat()*0.5)*lev*lev*2+out)-softClip(feedback*0.1)*saturate((1-lev-0.95)*20));
+    float wav = wavetable.process(saturate(lev),freq);
+
+    float gate = saturate(1-(1-lev-0.95)*20);
+    wave.write(softClip((wav+rand.nextFloat()*0.5)*lev*lev+out)-softClip(feedback*0.01)*gate);
     volume.set(0.1);
     float curVol = fabs(out);
     vol = volume.process(curVol*curVol);
@@ -133,7 +131,7 @@ float MPEWaveguideVoice::process(float feedback){
     }
     //return softClip(wav*blaster);
     //return softClip(wav*lev);
-    return out+wav*lev;
+    return (softClip(out*wav))*0.5;
     
 
 }

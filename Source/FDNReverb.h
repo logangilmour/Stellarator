@@ -36,6 +36,7 @@ private:
     std::array<std::vector<float>, delayCount> delays;
     std::array<int,delayCount> writers = {};
     std::array<LowpassFilter,delayCount> attenuators = {};
+    double angle=0;
 };
 
 #endif /* FDNReverb_h */

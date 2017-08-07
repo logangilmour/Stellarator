@@ -50,6 +50,7 @@
 		412647EE1E16E2D500306649 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D7C2046CF0E47FAD0334DFC /* QuartzCore.framework */; };
 		412647EF1E16E2D500306649 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5D55FB2669376FC4E953D83 /* WebKit.framework */; };
 		412647FB1E1AED9600306649 /* MPEWaveguideVoice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 412647F41E1AE19700306649 /* MPEWaveguideVoice.cpp */; };
+		41593A1D1F37A84C00390E20 /* VoicePanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 41593A1B1F37A84C00390E20 /* VoicePanel.cpp */; };
 		416E7C4D1E1D7087002F683C /* FDNReverb.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 416E7C4C1E1D7087002F683C /* FDNReverb.cpp */; };
 		41879BA61E1EB9A300810944 /* LowpassFilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 41879BA41E1EB9A300810944 /* LowpassFilter.cpp */; };
 		41879BA71E1EB9A300810944 /* VarDelay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 41879BA51E1EB9A300810944 /* VarDelay.cpp */; };
@@ -470,6 +471,8 @@
 		4130406E4A0C5D3AD95F13F9 /* juce_DropShadowEffect.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = juce_DropShadowEffect.cpp; path = ../../../juce/modules/juce_graphics/effects/juce_DropShadowEffect.cpp; sourceTree = SOURCE_ROOT; };
 		41321B4315722811B49E4897 /* envelope.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = envelope.c; path = "../../../juce/modules/juce_audio_formats/codecs/oggvorbis/libvorbis-1.3.2/lib/envelope.c"; sourceTree = SOURCE_ROOT; };
 		41473CBAF9C54AAF525BB342 /* juce_ReverbAudioSource.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = juce_ReverbAudioSource.cpp; path = ../../../juce/modules/juce_audio_basics/sources/juce_ReverbAudioSource.cpp; sourceTree = SOURCE_ROOT; };
+		41593A1B1F37A84C00390E20 /* VoicePanel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = VoicePanel.cpp; path = ../../Source/VoicePanel.cpp; sourceTree = "<group>"; };
+		41593A1C1F37A84C00390E20 /* VoicePanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VoicePanel.h; path = ../../Source/VoicePanel.h; sourceTree = "<group>"; };
 		416E7C4B1E1D6FCE002F683C /* DspUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DspUtil.h; path = ../../Source/DspUtil.h; sourceTree = "<group>"; };
 		416E7C4C1E1D7087002F683C /* FDNReverb.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FDNReverb.cpp; path = ../../Source/FDNReverb.cpp; sourceTree = "<group>"; };
 		416E7C511E1D7304002F683C /* VarDelay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VarDelay.h; path = ../../Source/VarDelay.h; sourceTree = "<group>"; };
@@ -2615,6 +2618,8 @@
 				41879BB01E2181B300810944 /* MPEWaveguideSynth.cpp */,
 				419F2B4D1EDB402800ACA90B /* Wavetable.cpp */,
 				419F2B4E1EDB402800ACA90B /* Wavetable.h */,
+				41593A1B1F37A84C00390E20 /* VoicePanel.cpp */,
+				41593A1C1F37A84C00390E20 /* VoicePanel.h */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -3935,6 +3940,7 @@
 				8ED35E2763CB1065FCE1C4A3 /* juce_gui_extra.mm in Sources */,
 				41879BA71E1EB9A300810944 /* VarDelay.cpp in Sources */,
 				1548315E134DDADD8A35227A /* juce_opengl.mm in Sources */,
+				41593A1D1F37A84C00390E20 /* VoicePanel.cpp in Sources */,
 				2EB1264A64F215261861A193 /* juce_video.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

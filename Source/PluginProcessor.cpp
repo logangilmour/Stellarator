@@ -23,8 +23,9 @@ StellaratorAudioProcessor::StellaratorAudioProcessor()
                       #endif
                        .withOutput ("Output", AudioChannelSet::stereo(), true)
                      #endif
-                       )
+                       ),
 #endif
+ parameters(*this, nullptr)
 {
     for(int i=0; i<15; ++i)
     {
@@ -32,6 +33,10 @@ StellaratorAudioProcessor::StellaratorAudioProcessor()
     }
     synth.enableLegacyMode (48);
     synth.setVoiceStealingEnabled (true);
+    
+    parameters.createAndAddParameter("output", "Output", String(), NormalisableRange<float>(0.0f,5.0f), 0.5f, nullptr, nullptr);
+    
+    parameters.state = ValueTree(Identifier("Stellerator"));
 }
 
 StellaratorAudioProcessor::~StellaratorAudioProcessor()
@@ -144,7 +149,7 @@ void StellaratorAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuf
     
     // This is the place where you'd normally do the guts of your plugin's
     // audio processing...
-    
+    synth.setParams(&parameters);
     synth.renderNextBlock(buffer, midiMessages, 0, buffer.getNumSamples());
     
   
@@ -159,21 +164,22 @@ bool StellaratorAudioProcessor::hasEditor() const
 
 AudioProcessorEditor* StellaratorAudioProcessor::createEditor()
 {
-    return new StellaratorAudioProcessorEditor (*this);
+    return new StellaratorAudioProcessorEditor (*this,parameters);
 }
 
 //==============================================================================
 void StellaratorAudioProcessor::getStateInformation (MemoryBlock& destData)
 {
-    // You should use this method to store your parameters in the memory block.
-    // You could do that either as raw data, or use the XML or ValueTree classes
-    // as intermediaries to make it easy to save and load complex data.
+    ScopedPointer<XmlElement> xml (parameters.state.createXml());
+    copyXmlToBinary (*xml, destData);
 }
 
 void StellaratorAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
-    // You should use this method to restore your parameters from this memory block,
-    // whose contents will have been created by the getStateInformation() call.
+    ScopedPointer<XmlElement> xmlState (getXmlFromBinary (data, sizeInBytes));
+    if (xmlState != nullptr)
+        if (xmlState->hasTagName (parameters.state.getType()))
+            parameters.state = ValueTree::fromXml (*xmlState);
 }
 
 //==============================================================================

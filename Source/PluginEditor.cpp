@@ -15,11 +15,12 @@
 
 
 //==============================================================================
-StellaratorAudioProcessorEditor::StellaratorAudioProcessorEditor (StellaratorAudioProcessor& p)
-    : AudioProcessorEditor (&p), processor (p)
+StellaratorAudioProcessorEditor::StellaratorAudioProcessorEditor (StellaratorAudioProcessor& p, AudioProcessorValueTreeState& a)
+    : AudioProcessorEditor (&p), processor (p), parameters(a)
 {
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
+    //addAndMakeVisible(voicePanel);
     setSize (400, 300);
     startTimerHz(30);
     
@@ -35,6 +36,11 @@ void StellaratorAudioProcessorEditor::paint (Graphics& g)
     std::string message ("Freq: ");
     
     g.fillAll (Colours::white);
+    
+    addAndMakeVisible (outputSlider);
+    outputSlider.setBounds(0, 0, 100, 100);
+    outputAttachment = new juce::AudioProcessorValueTreeState::SliderAttachment (parameters, "output", outputSlider);
+    
 
 }
 
@@ -46,7 +52,6 @@ void StellaratorAudioProcessorEditor::timerCallback()
 
 void StellaratorAudioProcessorEditor::resized()
 {
-    // This is generally where you'll want to lay out the positions of any
-    // subcomponents in your editor..
+    //voicePanel.setBounds(getBounds().reduced(10, 10));
 }
 

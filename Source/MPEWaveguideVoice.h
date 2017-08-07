@@ -19,6 +19,8 @@
 
 class MPEWaveguideVoice : public MPESynthesiserVoice{
 public:
+    void setParams(AudioProcessorValueTreeState* state);
+    
     void noteStarted() override;
     
     void noteStopped (bool allowTailOff) override;
